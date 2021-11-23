@@ -8,7 +8,7 @@ export const Camera: React.FC<{ onPhoto?: (img: Blob) => void }> = (props) => {
     const [capture, setCapture] = React.useState<ImageCapture>()
     const [track, setTrack] = React.useState<MediaStreamTrack>()
     if (state == "waiting") {
-        navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" } }, }).then(stream => {
             if (videoRef.current) {
                 videoRef.current.autoplay = true;
                 videoRef.current.srcObject = stream;
@@ -28,9 +28,16 @@ export const Camera: React.FC<{ onPhoto?: (img: Blob) => void }> = (props) => {
             })
         }
     }
-    const setFocus=(focus:number)=>{
-        if(track){
-            track.applyConstraints({advanced:[{focusDistance:focus}]})
+    const setFocus = (focus: number) => {
+        if (track) {
+            track.applyConstraints({
+                advanced: [{
+                    focusMode: "manual",
+                    focusDistance: focus
+                }]
+            }).catch(e => {
+                console.log(e)
+            })
         }
     }
     return (
@@ -38,6 +45,6 @@ export const Camera: React.FC<{ onPhoto?: (img: Blob) => void }> = (props) => {
             {state}
             <video ref={videoRef} />
             <button onClick={takePicture}>Take Picture</button>
-            <input type="range" min="0" max="1" step="0.01" onChange={(e)=>setFocus(parseFloat(e.target.value))}/>
+            <input type="range" min="0" max="1" step="0.01" onChange={(e) => setFocus(parseFloat(e.target.value))} />
         </div>);
 };
