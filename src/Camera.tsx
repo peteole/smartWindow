@@ -27,7 +27,6 @@ export const Camera: React.FC<{ onPhoto?: (img: Blob) => void }> = (props) => {
     const takePicture = () => {
         if (capture) {
             capture.takePhoto().then(blob => {
-                props.onPhoto?.(blob);
                 const rd=new FileReader()
                 rd.onload=()=>{
                     setCaptured(rd.result as string)

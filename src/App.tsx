@@ -16,8 +16,10 @@ function App() {
           const res = await fetch(uploadURL, {
             method: 'POST',
             body: dataURL
+          }).catch((reason) => {
+            console.log(reason)
           })
-          const resp = await res.text()
+          const resp = await res?.text()
           alert(resp)
         }
         reader.readAsDataURL(img)
